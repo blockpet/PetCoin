@@ -46,11 +46,13 @@ contract("PetCoin", async (accounts) => {
 
     var ownerBalanceBefore = await petCoinInstance.balanceOf(owner);
 
-    await petCoinInstance.lockUp(
+    var tx = await petCoinInstance.lockUp(
       recipient,
       amount,
       Caver.utils.toBN(releaseTime)
     );
+    var events = tx.logs.map((item) => item.event);
+    chai.expect(events.length === 2).to.equal(true);
 
     var ownerBalanceAfter = await petCoinInstance.balanceOf(owner);
     chai
@@ -92,7 +94,9 @@ contract("PetCoin", async (accounts) => {
     }
     await timeout(10000);
 
-    await petCoinInstance.lockUpRelease(recipient);
+    var tx = await petCoinInstance.lockUpRelease(recipient);
+    var events = tx.logs.map((item) => item.event);
+    chai.expect(events[0] === "LockUpReleased").to.equal(true);
 
     var recipientBalance = await petCoinInstance.balanceOf(recipient);
     chai.expect(recipientBalance.eq(amount)).to.equal(true);
@@ -104,5 +108,19 @@ contract("PetCoin", async (accounts) => {
       lockUpTotal3 = lockUpTotal3.add(obj.amount);
     }
     chai.expect(lockUpTotal3.eq(Caver.utils.toBN(0))).to.equal(true);
+  });
+
+  it("#4 check burn", async function () {
+    var amount = Caver.utils.toBN(10000).mul(DECIMAL18);
+
+    var balanceBefore = await petCoinInstance.balanceOf(owner);
+
+    var tx = await petCoinInstance.burn(amount);
+    var events = tx.logs.map((item) => item.event);
+    chai.expect(events.length === 2).to.equal(true);
+
+    var balanceAfter = await petCoinInstance.balanceOf(owner);
+
+    chai.expect(balanceBefore.eq(balanceAfter.add(amount))).to.equal(true);
   });
 });

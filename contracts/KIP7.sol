@@ -318,6 +318,7 @@ contract KIP7 is KIP13, IKIP7, ITimeLock, OwnerRole {
 
         _totalSupply = _totalSupply.sub(value);
         _balances[account] = _balances[account].sub(value);
+
         emit Transfer(account, address(0), value);
     }
 
@@ -406,11 +407,13 @@ contract KIP7 is KIP13, IKIP7, ITimeLock, OwnerRole {
         _lockedBalances[beneficiary].push(ticket);
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
 
+        emit Transfer(msg.sender, beneficiary, amount);
         emit LockedUp(beneficiary, amount, releaseTime);
     }
 
     /**
-     * @dev Internal function to release token at reserved time.
+     * @dev Internal function to release token locked up at reserved time.
+     * Only beneficiary or owner can release the token locked up
      */
     function _lockUpRelease(address beneficiary) public returns (bool) {
         require(

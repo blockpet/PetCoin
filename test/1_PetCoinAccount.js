@@ -58,6 +58,7 @@ contract("PetCoin", async (accounts) => {
         amount,
         Caver.utils.toBN(releaseTime)
       );
+
       chai.expect(true).to.equal(false);
     } catch (ex) {
       chai.expect(!!ex).to.equal(true);

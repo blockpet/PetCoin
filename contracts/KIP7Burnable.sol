@@ -25,12 +25,20 @@ contract KIP7Burnable is KIP13, KIP7 {
     }
 
     /**
+     * @dev Emitted when `value` tokens are burned from one account (`burner`).
+     *
+     * Note that `value` may be zero.
+     */
+    event Burn(address indexed burner, uint256 value);
+
+    /**
      * @dev Destroys `amount` tokens from the caller.
      *
      * See `KIP7._burn`.
      */
     function burn(uint256 amount) public {
         _burn(msg.sender, amount);
+        emit Burn(msg.sender, amount);
     }
 
     /**
@@ -38,5 +46,6 @@ contract KIP7Burnable is KIP13, KIP7 {
      */
     function burnFrom(address account, uint256 amount) public {
         _burnFrom(account, amount);
+        emit Burn(account, amount);
     }
 }

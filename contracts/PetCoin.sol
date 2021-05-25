@@ -5,8 +5,8 @@ import "./KIP7Pausable.sol";
 import "./KIP7Metadata.sol";
 
 /**
- * BPC는 mint, burn 기능을 제공하지 않는다.
- * Owner에게 initial supply가 지급된다.
+ * BPC is burnable, pausable but NOT mintable
+ * Initial supply is given to the owner run the contract for the first time.
  */
 contract PetCoin is KIP7Burnable, KIP7Pausable, KIP7Metadata {
     string public constant NAME = "BlockchainPetCoin";
