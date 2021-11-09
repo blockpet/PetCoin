@@ -9,7 +9,7 @@ import "./KIP7Metadata.sol";
  * Initial supply is given to the owner run the contract for the first time.
  */
 contract PetCoin is KIP7Burnable, KIP7Pausable, KIP7Metadata {
-    string public constant NAME = "BlockchainPetCoin";
+    string public constant NAME = "PetCompany";
     string public constant SYMBOL = "BPC";
     uint8 public constant DECIMALS = 18;
     uint256 public constant INITIAL_SUPPLY =
