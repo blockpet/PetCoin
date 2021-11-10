@@ -376,13 +376,12 @@ contract KIP7 is KIP13, IKIP7, ITimeLock, OwnerRole {
             return true;
         }
 
-        bytes4 retval =
-            IKIP7Receiver(recipient).onKIP7Received(
-                msg.sender,
-                sender,
-                amount,
-                _data
-            );
+        bytes4 retval = IKIP7Receiver(recipient).onKIP7Received(
+            msg.sender,
+            sender,
+            amount,
+            _data
+        );
         return (retval == _KIP7_RECEIVED);
     }
 
@@ -415,7 +414,7 @@ contract KIP7 is KIP13, IKIP7, ITimeLock, OwnerRole {
      * @dev Internal function to release token locked up at reserved time.
      * Only beneficiary or owner can release the token locked up
      */
-    function _lockUpRelease(address beneficiary) public returns (bool) {
+    function _lockUpRelease(address beneficiary) internal returns (bool) {
         require(
             beneficiary != address(0),
             "KIP7: lockUpRelease from the zero address"
