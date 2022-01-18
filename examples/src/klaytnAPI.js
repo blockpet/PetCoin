@@ -3,7 +3,7 @@ import _ from 'lodash';
 import dayjs from 'dayjs';
 import CaverExtKAS from 'caver-js-ext-kas';
 
-import PetCoin from './PetCoin.json';
+import PetCoin from '../../build/contracts/PetCoin.json';
 import config from './config/config';
 
 export const klaytnAPI = (() => {
@@ -114,6 +114,23 @@ export const klaytnAPI = (() => {
       );
 
       DECIMAL18 = caver.utils.toBN('1000000000000000000');
+    },
+
+    deploySmartContract: async ({ json, byteCode, from, gas }) => {
+      console.log('deploySmartContract entry', from);
+      const keyringContainer = new caver.keyringContainer();
+      const keyring = keyringContainer.keyring.createFromPrivateKey(
+        from.privateKey
+      );
+      keyringContainer.add(keyring);
+
+      const myContract = new caver.contract(json);
+
+      console.log('myContract', myContract);
+
+      const tx = await myContract.deploy({ from: from.address, gas }, byteCode);
+
+      keyringContainer.sign(from, tx);
     },
 
     balanceOf: async (address) => {

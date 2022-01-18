@@ -2,7 +2,7 @@ import log4js from 'log4js';
 import _ from 'lodash';
 import CaverExtKAS from 'caver-js-ext-kas';
 
-import PetCoin from './PetCoin.json';
+import PetCoin from '../../build/contracts/PetCoin.json';
 import config from './config/config';
 import { klaytnAPI } from './klaytnAPI';
 
@@ -14,18 +14,30 @@ const message = 'JS Bootstrap app run successfully!';
 const bootstrap = async () => {
   klaytnAPI.initialize(config.klaytn);
 
-  const owner = config.klaytn.owner;
-  const test1 = config.klaytn.testAccounts[0];
-  const test2 = config.klaytn.testAccounts[1];
+  try {
+    const result = await klaytnAPI.deploySmartContract({
+      json: PetCoin.abi,
+      byteCode: PetCoin.bytecode,
+      from: config.klaytn.owner,
+      gas: 1000000,
+    });
+    console.log('smart contract deploy result', result);
+  } catch (ex) {
+    console.log('tx ex', ex);
+  }
 
-  const balance = await klaytnAPI.balanceOf(owner.address);
-  console.log(`balance of owner is `, balance);
+  // const owner = config.klaytn.owner;
+  // const test1 = config.klaytn.testAccounts[0];
+  // const test2 = config.klaytn.testAccounts[1];
 
-  const balance1 = await klaytnAPI.balanceOf(test1.address);
-  console.log(`balance of ${test1} is `, balance1);
+  // const balance = await klaytnAPI.balanceOf(owner.address);
+  // console.log(`balance of owner is `, balance);
 
-  const balance2 = await klaytnAPI.balanceOf(test2.address);
-  console.log(`balance of ${test2} is `, balance2);
+  // const balance1 = await klaytnAPI.balanceOf(test1.address);
+  // console.log(`balance of ${test1} is `, balance1);
+
+  // const balance2 = await klaytnAPI.balanceOf(test2.address);
+  // console.log(`balance of ${test2} is `, balance2);
 
   // const count = await klaytnAPI.getLockUpCount(owner, test2.address);
   // console.log('lockup count', count);
@@ -48,12 +60,12 @@ const bootstrap = async () => {
   //   console.log('tx ex', ex);
   // }
 
-  try {
-    const tx = await klaytnAPI.lockUpRelease(owner, test2.address);
-    console.log('tx', tx);
-  } catch (ex) {
-    console.log('tx ex', ex);
-  }
+  // try {
+  //   const tx = await klaytnAPI.lockUpRelease(owner, test2.address);
+  //   console.log('tx', tx);
+  // } catch (ex) {
+  //   console.log('tx ex', ex);
+  // }
 
   // try {
   //   const tx = await klaytnAPI.transfer(test1, test2.address, 1000);
